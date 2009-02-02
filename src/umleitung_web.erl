@@ -28,7 +28,7 @@ loop(Req, DocRoot) ->
                 {ok, Dest} ->
                     Req:respond({302, [{"Location", Dest}], ""});
                 _ ->
-                    Req:respond({501, [], "error"})
+                    Req:serve_file("404.html", DocRoot)
             end;
         'POST' ->
             case Path of

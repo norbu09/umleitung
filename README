@@ -1,0 +1,9 @@
+This is the source of the erlounge wellignton 02-2009
+
+The demo application connects couchdb and mochiweb using erlang_couchdb
+and creates a small HTTP redirect system that can be confugured in
+CouchDB.
+
+Feel free to play with it.
+
+... relax ...

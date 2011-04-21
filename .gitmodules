@@ -1,0 +1,6 @@
+[submodule "deps/erlang_couchdb"]
+	path = deps/erlang_couchdb
+	url = https://github.com/ngerakines/erlang_couchdb.git
+[submodule "deps/mochiweb"]
+	path = deps/mochiweb
+	url = https://github.com/mochi/mochiweb.git

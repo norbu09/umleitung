@@ -1,0 +1,3 @@
+ebin/*.beam
+doc/*.html
+src/*.dump

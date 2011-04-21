@@ -43,7 +43,7 @@ loop(Req, DocRoot) ->
 
 lookup(Path) ->
     io:format("PATH: ~s~n", [Path]),
-    {json,{struct, Props}} = erlang_couchdb:invoke_view({"127.0.0.1", 5984}, "umleitung", "redir", "match", [{"key", "\"" ++ Path ++ "\""}]),
+    {json,{struct, Props}} = erlang_couchdb:invoke_view({"127.0.0.1", 5984}, "umleitung", "redir", "uri_match", [{"key", "\"" ++ Path ++ "\""}]),
     try  proplists:get_value(<<"rows">>, Props) of
         [{struct, Rows} | _] ->
             {ok, proplists:get_value(<<"value">>, Rows)};

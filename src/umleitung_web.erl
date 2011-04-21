@@ -1,10 +1,10 @@
-%% @author author <author@example.com>
-%% @copyright YYYY author.
+%% @author Lenz Gschwendtner <lenz@ideegeo.com>
+%% @copyright 2008 lenz.
 
 %% @doc Web server for umleitung.
 
 -module(umleitung_web).
--author('author <author@example.com>').
+-author('Lenz Gschwendtner <lenz@ideegeo.com>').
 
 -export([start/1, stop/0, loop/2]).
 
@@ -20,13 +20,17 @@ start(Options) ->
 stop() ->
     mochiweb_http:stop(?MODULE).
 
+%% @doc Process requests for GET/HEAD requests and reply with a HTTP
+%% redirect if we find a matching destination.
 loop(Req, DocRoot) ->
-    "/" ++ Path = Req:get(path),
+    Host = Req:get_header_value(host),
+    Path = Host ++ Req:get(path),
     case Req:get(method) of
         Method when Method =:= 'GET'; Method =:= 'HEAD' ->
             case lookup(Path) of
                 {ok, Dest} ->
-                    Req:respond({302, [{"Location", Dest}], ""});
+                    io:format("DESTINATION: ~s~n", [Dest]),
+                    Req:respond({302, [{"Location", Dest}, {"Content-Type", "text/html; charset=UTF-8"}], ""});
                 _ ->
                     Req:serve_file("404.html", DocRoot)
             end;
@@ -41,6 +45,10 @@ loop(Req, DocRoot) ->
 
 %% Internal API
 
+%% @spec lookup(Path::string()) -> term
+%% @doc Process a lookup request. This takes a URI and asks CouchDB for
+%% a known destination. Response is the destination or error.
+
 lookup(Path) ->
     io:format("PATH: ~s~n", [Path]),
     {json,{struct, Props}} = erlang_couchdb:invoke_view({"127.0.0.1", 5984}, "umleitung", "redir", "uri_match", [{"key", "\"" ++ Path ++ "\""}]),
@@ -54,3 +62,4 @@ lookup(Path) ->
 
 get_option(Option, Options) ->
     {proplists:get_value(Option, Options), proplists:delete(Option, Options)}.
+
